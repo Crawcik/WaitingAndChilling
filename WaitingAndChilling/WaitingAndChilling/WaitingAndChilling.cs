@@ -32,6 +32,18 @@ namespace WaitingAndChilling
         [ConfigOption]
         public readonly bool enabled = true;
 
+        [ConfigOption("roles")]
+        public readonly string roleInt = "14";
+
+        [ConfigOption("choose_one_role_per_round")]
+        public readonly bool oneRolePerRound = true;
+
+        [ConfigOption("cords")]
+        public readonly string cords = "53,1020,-43";
+        /*
+        [ConfigOption("items")]
+        public readonly int[] items = { 23 , 30 };*/
+
         public override void OnDisable()
         {
             Info("WAC Disabled.");
