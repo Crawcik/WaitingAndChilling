@@ -7,15 +7,13 @@ Players are spawned in a lobby as tutorials. This is just to entertain people wh
 
 `wac_enabled` Enables the plugin. Default to true.
 
-`wac_giveItems` Give players guns in the lobby. (Best when `admintoolbox_tutorial_dmg_allowed` is disabled in the AdminToolBox plugin.)
+`wac_roles` Please follow this format when using this config: `roleID,roleID,roleID` Having more than one will randomise each round. This defaults to just 14 (Tutorial)
 
 If you want to change the location of the lobby:
 
-`wac_coordinate_x` Defaults to 53
+`wac_cords` Please follow this format when using this config: `X1,Y1,Z1;X2,Y2,Z2;X3,Y3,Z3` This defaults to the Tutorial spawn.
 
-`wac_coordinate_y` Defaults to 1020
-
-`wac_coordinate_z` Defaults to -43
+`wac_choose_one_role_per_round` Whether to have everyone the same role or each person a random role every round (If theres more than one role in `wac_roles`)
 
 # Installation
 
