@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace WaitingAndChilling
 {
-    class EventHandler : IEventHandlerFixedUpdate, IEventHandlerPlayerJoin, IEventHandlerRoundRestart, IEventHandlerRoundStart
+    class EventHandler : IEventHandlerFixedUpdate, IEventHandlerRoundRestart, IEventHandlerRoundStart
     {
         private readonly WaitingAndChilling plugin;
 
@@ -58,6 +58,11 @@ namespace WaitingAndChilling
                     {
                         if (referenceHub.isDedicatedServer)
                             continue;
+                        if (referenceHub.characterClassManager.CurClass != RoleType.Tutorial)
+                        {
+                            referenceHub.characterClassManager.SetPlayersClass(RoleType.Tutorial, referenceHub.gameObject);
+                            referenceHub.playerMovementSync.OverridePosition(new Vector3(53, 1020, -43), 0);
+                        }  
                         referenceHub.hints.Show(new Hints.TextHint(str, new Hints.HintParameter[] { new Hints.StringHintParameter(string.Empty) }, Hints.HintEffectPresets.FadeInAndOut(0f), 1f));
                     }
                 }
@@ -65,16 +70,6 @@ namespace WaitingAndChilling
                 {
                     timer = 0;
                 }
-            }
-        }
-
-        public void OnPlayerJoin(PlayerJoinEvent ev)
-        {
-            if (waitingForPlayers)
-            {
-                ev.Player.ChangeRole(Smod2.API.RoleType.TUTORIAL, true, false);
-                ev.Player.Teleport(new Vector(53, 1020, -43));
-                plugin.Info("Set " + ev.Player.Name + " to tutorial");
             }
         }
 
