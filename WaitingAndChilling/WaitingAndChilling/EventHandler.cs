@@ -24,7 +24,7 @@ namespace WaitingAndChilling
         float timer = 0;
 
         List<int> roles = new List<int>();
-        List<Vector3> positions = new List<Vector3>();
+        List<Vector> positions = new List<Vector>();
 
         string positionString = "";
         string rolesString = "";
@@ -58,7 +58,7 @@ namespace WaitingAndChilling
         {
             if (waitingForPlayers)
             {
-                System.Random rnd = new System.Random();
+                //System.Random rnd = new System.Random();
                 try { GameObject.Find("StartRound").transform.localScale = Vector3.zero; }
                 catch { plugin.Debug("StartRound not found... If you see this because you just started the server, ignore this."); }
 
@@ -88,26 +88,27 @@ namespace WaitingAndChilling
                     {
                         if (referenceHub.isDedicatedServer)
                             continue;
-                        
-                        if (referenceHub.characterClassManager.CurClass == RoleType.Spectator || referenceHub.characterClassManager.CurClass == (RoleType)i)
+
+                        /*if (referenceHub.characterClassManager.CurClass == RoleType.Spectator || referenceHub.characterClassManager.CurClass == (RoleType)i)
                         {
                             if (!plugin.oneRolePerRound)
                                 role = rnd.Next(0, roles.Count);
                             referenceHub.characterClassManager.SetPlayersClass((RoleType)roles[role], referenceHub.gameObject, false, false, false);
                             referenceHub.playerMovementSync.OverridePosition(positions[pos], 0);
-                            /*referenceHub.inventory.AllowChangeItem();
 
-                            if (plugin.items.ToList().Any())
+                        referenceHub.inventory.AllowChangeItem();
+
+                        if (plugin.items.ToList().Any())
+                        {
+                            foreach (int item in plugin.items)
                             {
-                                foreach (int item in plugin.items)
-                                {
-                                    referenceHub.inventory.AddNewItem((ItemType)item);
-                                }
-                                referenceHub.ammoBox[(int)AmmoType.AMMO9MM] = 100;
-                                referenceHub.ammoBox[(int)AmmoType.AMMO556] = 100;
-                                referenceHub.ammoBox[(int)AmmoType.AMMO762] = 100;
-                            }*/
-                        }  
+                                referenceHub.inventory.AddNewItem((ItemType)item);
+                            }
+                            referenceHub.ammoBox[(int)AmmoType.AMMO9MM] = 100;
+                            referenceHub.ammoBox[(int)AmmoType.AMMO556] = 100;
+                            referenceHub.ammoBox[(int)AmmoType.AMMO762] = 100;
+                        }
+                    }*/
                         referenceHub.hints.Show(new Hints.TextHint(str, new Hints.HintParameter[] { new Hints.StringHintParameter(string.Empty) }, Hints.HintEffectPresets.FadeInAndOut(0f), 1f));
                     }
                 }
@@ -155,7 +156,7 @@ namespace WaitingAndChilling
                     plugin.Info("Gojng to try parse " + xyz[0] + " " + xyz[1] + " " + xyz[2]);
                     try
                     {
-                        positions.Add(new Vector3(float.Parse(xyz[0]), float.Parse(xyz[1]), float.Parse(xyz[2])));
+                        positions.Add(new Vector(float.Parse(xyz[0]), float.Parse(xyz[1]), float.Parse(xyz[2])));
                     }
                     catch
                     {
@@ -166,7 +167,7 @@ namespace WaitingAndChilling
             if (!positions.Any())
             {
                 plugin.Info("positions list empty, adding default.");
-                positions.Add(new Vector3(53, 1020, -43));
+                positions.Add(new Vector(53, 1020, -43));
             }
             System.Random rnd = new System.Random();
             pos = rnd.Next(0, positions.Count);
@@ -206,6 +207,17 @@ namespace WaitingAndChilling
             {
                 StartUp();
                 startUpDone = true;
+            }
+            
+            if (waitingForPlayers)
+            {
+                if (!plugin.oneRolePerRound)
+                {
+                    System.Random rnd = new System.Random();
+                    role = rnd.Next(0, roles.Count);
+                }
+                //ev.Player.Teleport(positions[pos]);
+                ev.Player.ChangeRole((Smod2.API.RoleType)roles[role]);
             }
         }
     }
