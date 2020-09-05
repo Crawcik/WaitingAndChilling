@@ -39,7 +39,7 @@ namespace WaitingAndChilling
         public readonly bool oneRolePerRound = true;
 
         [ConfigOption("cords")]
-        public readonly string cords = "53,1020,-43";
+        public readonly string cords = "-11,1005,-43";
         /*
         [ConfigOption("items")]
         public readonly int[] items = { 23 , 30 };*/
