@@ -12,13 +12,14 @@ using UnityEngine;
 
 namespace WaitingAndChilling
 {
-    class EventHandler : IEventHandlerFixedUpdate, IEventHandlerRoundRestart, IEventHandlerRoundStart, IEventHandlerDoorAccess, IEventHandlerElevatorUse, IEventHandlerPlayerJoin
+    internal class EventHandler : IEventHandlerFixedUpdate, IEventHandlerRoundRestart, IEventHandlerRoundStart, IEventHandlerDoorAccess, IEventHandlerElevatorUse, IEventHandlerPlayerJoin
     {
         private readonly WaitingAndChilling plugin;
 
         bool waitingForPlayers = true;
 
         bool startUpDone = false;
+        bool stationsSpwned = false;
 
         float time = 1;
         float timer = 0;
@@ -116,6 +117,21 @@ namespace WaitingAndChilling
                 {
                     timer = 0;
                 }
+
+                if (plugin.stations)
+                {
+                    foreach (Player player in plugin.Server.GetPlayers())
+                    {
+                        if (player.GetPosition().x >= 53.2576f && player.GetPosition().x <= 53.75784f && player.GetPosition().y >= 1018 && player.GetPosition().y <= 1020 && player.GetPosition().z >= -40.1317f && player.GetPosition().z <= -39)
+                        {
+                            player.Teleport(new Vector(53.43536f + 63.93872f, 1019.5f - 41.38f, -40.70692f + 173.04748f));
+                        }
+                        else if (player.GetPosition().x >= 53.2576f + 63.93872f && player.GetPosition().x <= 53.75784f + 63.93872f && player.GetPosition().y >= 1018 - 41.38f && player.GetPosition().y <= 1020 - 41.38f && player.GetPosition().z >= -40.1317f + 173.04748f && player.GetPosition().z <= -39 + 173.04748f)
+                        {
+                            player.Teleport(new Vector(53.43536f, 1019.5f, -40.70692f));
+                        }
+                    }
+                }
             }
         }
 
@@ -128,6 +144,7 @@ namespace WaitingAndChilling
             if (plugin.oneRolePerRound)
                 role = rnd.Next(0, roles.Count);
             waitingForPlayers = true;
+            stationsSpwned = false;
         }
 
         public void OnRoundStart(RoundStartEvent ev)
@@ -199,6 +216,25 @@ namespace WaitingAndChilling
             }
             if (plugin.oneRolePerRound)
                 role = rnd.Next(0, roles.Count);
+
+            
+            
+        }
+
+        void SpawnStations()//spawn weapon stations
+        {
+            plugin.SpawnWorkbench(new Vector3(97, 976, 117), new Vector3(0, -90, 0), new Vector3(25, 10, 5), true);
+            plugin.SpawnWorkbench(new Vector3(126, 976, 138), new Vector3(0, 0, 0), new Vector3(25, 10, 5), true);
+            plugin.SpawnWorkbench(new Vector3(147, 976, 109), new Vector3(0, 90, 0), new Vector3(25, 10, 5), true);
+            plugin.SpawnWorkbench(new Vector3(119, 976, 90), new Vector3(0, 180, 0), new Vector3(25, 10, 5), true);
+
+            plugin.SpawnWorkbench(new Vector3(55, 1019, -39.5f), new Vector3(0, 90, 0), new Vector3(1, 1, 1), true);
+            plugin.SpawnWorkbench(new Vector3(52, 1019, -39.5f), new Vector3(0, -90, 0), new Vector3(1, 1, 1), true);
+            plugin.SpawnWorkbench(new Vector3(53.5f, 1018, -39.4f), new Vector3(0, 180, 0), new Vector3(1, 1, 1), true);
+
+            plugin.SpawnWorkbench(new Vector3(55 + 63.93872f, 1019 - 41.38f, -39.5f + 173.04748f), new Vector3(0, 90, 0), new Vector3(1, 1, 1), true);
+            plugin.SpawnWorkbench(new Vector3(52 + 63.93872f, 1019 - 41.38f, -39.5f + 173.04748f), new Vector3(0, -90, 0), new Vector3(1, 1, 1), true);
+            plugin.SpawnWorkbench(new Vector3(53.5f + 63.93872f, 1018 - 41.38f, -39.4f + 173.04748f), new Vector3(0, 180, 0), new Vector3(1, 1, 1), true);
         }
 
         public void OnPlayerJoin(PlayerJoinEvent ev)
@@ -208,7 +244,11 @@ namespace WaitingAndChilling
                 StartUp();
                 startUpDone = true;
             }
-            
+            if (plugin.stations && !stationsSpwned)
+            {
+                SpawnStations();
+                stationsSpwned = true;
+            }
             if (waitingForPlayers)
             {
                 if (!plugin.oneRolePerRound)
