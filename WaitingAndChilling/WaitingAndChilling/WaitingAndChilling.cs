@@ -30,8 +30,11 @@ namespace WaitingAndChilling
         )]
     public class WaitingAndChilling : Plugin
     {
-        [ConfigOption("enabled")]
+        [ConfigOption]
         public readonly bool enabled = true;
+
+        [ConfigOption]
+        public readonly bool stations = false;//keep false this breaks worstations around the map
 
         [ConfigOption("roles")]
         public readonly string roleInt = "14";
@@ -67,7 +70,25 @@ namespace WaitingAndChilling
             if (enabled)
             {
                 AddEventHandlers(new EventHandler(this));
+                AddCommand("wac", new CommandHandler(this));
             }
+        }
+
+        public void SpawnWorkbench(Vector3 position, Vector3 rotation, Vector3 size, bool spawn, string objName)
+        {
+            GameObject bench =
+                UnityEngine.Object.Instantiate(
+                    NetworkManager.singleton.spawnPrefabs.Find(p => p.gameObject.name == objName));
+            Offset offset = new Offset();
+            offset.position = position;
+            offset.rotation = rotation;
+            offset.scale = Vector3.one;
+            bench.gameObject.transform.localScale = size;
+
+            if (spawn) NetworkServer.Spawn(bench);
+            else NetworkServer.Destroy(bench);
+            bench.GetComponent<WorkStation>().Networkposition = offset;
+            bench.AddComponent<WorkStationUpgrader>();
         }
     }
 }
