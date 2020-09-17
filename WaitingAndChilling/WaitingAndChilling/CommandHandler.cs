@@ -35,10 +35,10 @@ namespace WaitingAndChilling
             if (_args.Any())
             {
                 switch (_args[0].ToLower())
-                    {
-                        default:
-                            return new string[] { "Invalid argument." };
-                        case "weaponman":
+                {
+                    default:
+                        return new string[] { "Invalid argument." };
+                    case "weaponman":
                         try
                         {
                             if (float.TryParse(_args[1], out float x))

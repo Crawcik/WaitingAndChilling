@@ -33,7 +33,7 @@ namespace WaitingAndChilling
         public EventHandler(WaitingAndChilling plugin)
         {
             this.plugin = plugin;
-            
+
         }
 
         public void OnDoorAccess(PlayerDoorAccessEvent ev)
@@ -221,8 +221,8 @@ namespace WaitingAndChilling
             if (plugin.oneRolePerRound)
                 role = rnd.Next(0, roles.Count);
 
-            
-            
+
+
         }
 
         void SpawnStations()//spawn weapon stations

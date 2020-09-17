@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Smod2;
-using Smod2.API;
 using Smod2.Attributes;
 using Smod2.Config;
-using Smod2.EventHandlers;
-using Smod2.Events;
-using Smod2.Lang;
-using Smod2.Piping;
 using UnityEngine;
 using Mirror;
 
