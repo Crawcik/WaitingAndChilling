@@ -1,5 +1,4 @@
 ﻿using System;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,8 +25,8 @@ namespace WaitingAndChilling
         langFile = "waitingandchilling",
         version = "1.3.2",
         SmodMajor = 3,
-        SmodMinor = 8,
-        SmodRevision = 4
+        SmodMinor = 9,
+        SmodRevision = 0
         )]
     public class WaitingAndChilling : Plugin
     {
