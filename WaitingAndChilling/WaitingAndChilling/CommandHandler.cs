@@ -110,7 +110,7 @@ namespace WaitingAndChilling
             }
             else
             {
-                return new string[] { "\n[ Waiting And Chilling ]\nCommands:\nwac weaponman/locker <x> <y> <z> <rx> <ry> <rz> <playerid>" };
+                return new string[] { "\n[ Waiting And Chilling ]\nCommands:\nwac weaponman <x> <y> <z> <rx> <ry> <rz> <playerid>" };
             }
         }
     }
