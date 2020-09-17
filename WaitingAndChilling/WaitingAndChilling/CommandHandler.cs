@@ -60,7 +60,7 @@ namespace WaitingAndChilling
                                                             if (player.PlayerId == playerid)
                                                             {
                                                                 GameObject playerObj = (GameObject)player.GetGameObject();
-                                                                plugin.SpawnWorkbench(new Vector3(player.GetPosition().x, player.GetPosition().y, player.GetPosition().z), new Vector3(rx, ry, rz), new Vector3(x, y, z), true);
+                                                                plugin.SpawnWorkbench(new Vector3(player.GetPosition().x, player.GetPosition().y, player.GetPosition().z), new Vector3(rx, ry, rz), new Vector3(x, y, z), true, "Work Station");
                                                                 string str = "Spawning weapon manager at " + player.GetPosition().x + " " + player.GetPosition().y + " " + player.GetPosition().z;
                                                                 return new string[] { str };
                                                             }
@@ -99,18 +99,18 @@ namespace WaitingAndChilling
                             }
                             else
                             {
-                                return new string[] { "X must be a number." };
+                                return new string[] { "X must be a number or use here" };
                             }
                         }
                         catch
                         {
                             return new string[] { "Arguments <x>, <y>, <z>, <rx>, <ry>, <rz>, and <playerid> required." };
                         }
-                    }
+                }
             }
             else
             {
-                return new string[] { "\n[ Waiting And Chilling ]\nCommands:\nwac weaponman <x> <y> <z> <rx> <ry> <rz> <playerid>" };
+                return new string[] { "\n[ Waiting And Chilling ]\nCommands:\nwac weaponman/locker <x> <y> <z> <rx> <ry> <rz> <playerid>" };
             }
         }
     }

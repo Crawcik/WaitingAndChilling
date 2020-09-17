@@ -35,7 +35,7 @@ namespace WaitingAndChilling
         public readonly bool enabled = true;
 
         [ConfigOption]
-        public readonly bool stations = false;
+        public readonly bool stations = false;//keep false this breaks worstations around the map
 
         [ConfigOption("roles")]
         public readonly string roleInt = "14";
@@ -75,11 +75,11 @@ namespace WaitingAndChilling
             }
         }
 
-        public void SpawnWorkbench(Vector3 position, Vector3 rotation, Vector3 size, bool spawn)
+        public void SpawnWorkbench(Vector3 position, Vector3 rotation, Vector3 size, bool spawn, string objName)
         {
             GameObject bench =
                 UnityEngine.Object.Instantiate(
-                    NetworkManager.singleton.spawnPrefabs.Find(p => p.gameObject.name == "Work Station"));
+                    NetworkManager.singleton.spawnPrefabs.Find(p => p.gameObject.name == objName));
             Offset offset = new Offset();
             offset.position = position;
             offset.rotation = rotation;

@@ -14,7 +14,6 @@ C:\Users\f4fri\Desktop\Kavex Federation\SCP SL Programm Stuff\scopophobiaPlugins
 C:\Users\f4fri\Desktop\Kavex Federation\SCP SL Programm Stuff\scopophobiaPlugins\WaitingAndChilling\WaitingAndChilling\WaitingAndChilling\WaitingAndChilling\bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestModule.dll
 C:\Users\f4fri\Desktop\Kavex Federation\SCP SL Programm Stuff\scopophobiaPlugins\WaitingAndChilling\WaitingAndChilling\WaitingAndChilling\WaitingAndChilling\bin\Debug\netstandard2.0\CommandSystem.Core.dll
 C:\Users\f4fri\Desktop\Kavex Federation\SCP SL Programm Stuff\scopophobiaPlugins\WaitingAndChilling\WaitingAndChilling\WaitingAndChilling\WaitingAndChilling\bin\Debug\netstandard2.0\DissonanceVoip.dll
-C:\Users\f4fri\Desktop\Kavex Federation\SCP SL Programm Stuff\scopophobiaPlugins\WaitingAndChilling\WaitingAndChilling\WaitingAndChilling\WaitingAndChilling\bin\Debug\netstandard2.0\Mono.Nat.dll
 C:\Users\f4fri\Desktop\Kavex Federation\SCP SL Programm Stuff\scopophobiaPlugins\WaitingAndChilling\WaitingAndChilling\WaitingAndChilling\WaitingAndChilling\bin\Debug\netstandard2.0\UnityEngine.ParticleSystemModule.dll
 C:\Users\f4fri\Desktop\Kavex Federation\SCP SL Programm Stuff\scopophobiaPlugins\WaitingAndChilling\WaitingAndChilling\WaitingAndChilling\WaitingAndChilling\bin\Debug\netstandard2.0\Facepunch.Steamworks.Win64.dll
 C:\Users\f4fri\Desktop\Kavex Federation\SCP SL Programm Stuff\scopophobiaPlugins\WaitingAndChilling\WaitingAndChilling\WaitingAndChilling\WaitingAndChilling\bin\Debug\netstandard2.0\Unity.TextMeshPro.dll
