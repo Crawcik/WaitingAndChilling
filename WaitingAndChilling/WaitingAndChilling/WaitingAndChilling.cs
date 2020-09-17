@@ -1,5 +1,4 @@
 ﻿using System;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +11,8 @@ using Smod2.EventHandlers;
 using Smod2.Events;
 using Smod2.Lang;
 using Smod2.Piping;
+using UnityEngine;
+using Mirror;
 
 namespace WaitingAndChilling
 {
@@ -22,15 +23,18 @@ namespace WaitingAndChilling
         id = "f4fridey.waitingandchilling.plugin",
         configPrefix = "wac",
         langFile = "waitingandchilling",
-        version = "1.3",
+        version = "1.3.2",
         SmodMajor = 3,
-        SmodMinor = 8,
-        SmodRevision = 4
+        SmodMinor = 9,
+        SmodRevision = 0
         )]
     public class WaitingAndChilling : Plugin
     {
         [ConfigOption]
         public readonly bool enabled = true;
+
+        [ConfigOption]
+        public readonly bool stations = false;//keep false this breaks worstations around the map
 
         [ConfigOption("roles")]
         public readonly string roleInt = "14";
@@ -66,7 +70,25 @@ namespace WaitingAndChilling
             if (enabled)
             {
                 AddEventHandlers(new EventHandler(this));
+                AddCommand("wac", new CommandHandler(this));
             }
+        }
+
+        public void SpawnWorkbench(Vector3 position, Vector3 rotation, Vector3 size, bool spawn, string objName)
+        {
+            GameObject bench =
+                UnityEngine.Object.Instantiate(
+                    NetworkManager.singleton.spawnPrefabs.Find(p => p.gameObject.name == objName));
+            Offset offset = new Offset();
+            offset.position = position;
+            offset.rotation = rotation;
+            offset.scale = Vector3.one;
+            bench.gameObject.transform.localScale = size;
+
+            if (spawn) NetworkServer.Spawn(bench);
+            else NetworkServer.Destroy(bench);
+            bench.GetComponent<WorkStation>().Networkposition = offset;
+            bench.AddComponent<WorkStationUpgrader>();
         }
     }
 }
