@@ -33,13 +33,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\..\SCPSLServer\server\SCPSL_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\Libraries\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Mirror">
-      <HintPath>..\..\..\..\..\..\SCPSLServer\server\SCPSL_Data\Managed\Mirror.dll</HintPath>
+      <HintPath>..\Libraries\Mirror.dll</HintPath>
     </Reference>
     <Reference Include="Smod2">
-      <HintPath>..\..\..\..\..\..\SCPSLServer\server\SCPSL_Data\Managed\Smod2.dll</HintPath>
+      <HintPath>..\Libraries\Smod2.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -50,10 +50,10 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\..\SCPSLServer\server\SCPSL_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\Libraries\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\..\..\SCPSLServer\server\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\Libraries\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
