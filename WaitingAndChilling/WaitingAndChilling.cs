@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Smod2;
-using Smod2.API;
+﻿using Smod2;
 using Smod2.Attributes;
 using Smod2.Config;
-using Smod2.EventHandlers;
-using Smod2.Events;
-using Smod2.Lang;
-using Smod2.Piping;
 using UnityEngine;
 using Mirror;
 
@@ -23,30 +13,24 @@ namespace WaitingAndChilling
         id = "f4fridey.waitingandchilling.plugin",
         configPrefix = "wac",
         langFile = "waitingandchilling",
-        version = "1.3.2",
+        version = "1.4.0",
         SmodMajor = 3,
-        SmodMinor = 9,
-        SmodRevision = 0
+        SmodMinor = 10,
+        SmodRevision = 2
         )]
     public class WaitingAndChilling : Plugin
     {
         [ConfigOption]
-        public readonly bool enabled = true;
+        public readonly bool Enabled = true;
 
         [ConfigOption]
-        public readonly bool stations = false;//keep false this breaks worstations around the map
+        public readonly bool Stations = false;//keep false this breaks worstations around the map
 
-        [ConfigOption("roles")]
-        public readonly string roleInt = "14";
-
-        [ConfigOption("choose_one_role_per_round")]
-        public readonly bool oneRolePerRound = true;
+        [ConfigOption("role")]
+        public readonly int Role = (int)RoleType.Tutorial;
 
         [ConfigOption("cords")]
-        public readonly string cords = "-11,1005,-43";
-        /*
-        [ConfigOption("items")]
-        public readonly int[] items = { 23 , 30 };*/
+        public readonly string Cords = "-11,1005,-43";
 
         public override void OnDisable()
         {
@@ -55,7 +39,7 @@ namespace WaitingAndChilling
 
         public override void OnEnable()
         {
-            if (enabled)
+            if (Enabled)
             {
                 Info("WAC Enabled.");
             }
@@ -67,16 +51,15 @@ namespace WaitingAndChilling
 
         public override void Register()
         {
-            if (enabled)
+            if (Enabled)
             {
                 AddEventHandlers(new EventHandler(this));
-                AddCommand("wac", new CommandHandler(this));
             }
         }
 
         public void SpawnWorkbench(Vector3 position, Vector3 rotation, Vector3 size, bool spawn, string objName)
         {
-            GameObject bench =
+            /*GameObject bench =
                 UnityEngine.Object.Instantiate(
                     NetworkManager.singleton.spawnPrefabs.Find(p => p.gameObject.name == objName));
             Offset offset = new Offset();
@@ -87,8 +70,9 @@ namespace WaitingAndChilling
 
             if (spawn) NetworkServer.Spawn(bench);
             else NetworkServer.Destroy(bench);
-            bench.GetComponent<WorkStation>().Networkposition = offset;
-            bench.AddComponent<WorkStationUpgrader>();
+            
+            bench.GetComponent<>().Networkposition = offset;
+            bench.AddComponent<WorkStationUpgrader>();*/
         }
     }
 }

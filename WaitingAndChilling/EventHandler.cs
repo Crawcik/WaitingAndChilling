@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Smod2;
 using Smod2.API;
 using Smod2.EventHandlers;
@@ -14,31 +10,25 @@ namespace WaitingAndChilling
 {
     internal class EventHandler : IEventHandlerFixedUpdate, IEventHandlerRoundRestart, IEventHandlerRoundStart, IEventHandlerDoorAccess, IEventHandlerElevatorUse, IEventHandlerPlayerJoin
     {
-        private readonly WaitingAndChilling plugin;
+        private const float _offset = 1;
 
-        bool waitingForPlayers = true;
-
-        bool startUpDone = false;
-        bool stationsSpwned = false;
-
-        float time = 1;
-        float timer = 0;
-
-        List<int> roles = new List<int>();
-        List<Vector> positions = new List<Vector>();
-
-        string positionString = "";
-        string rolesString = "";
+        private readonly List<Vector> _positions = new List<Vector>();
+        private readonly WaitingAndChilling _plugin;
+        private bool _waitingForPlayers = true;
+        private bool _startUpDone = false;
+        private bool _stationsSpawned = false;
+        private float _timer = 0;
+        private int _nextPos = 0;
 
         public EventHandler(WaitingAndChilling plugin)
         {
-            this.plugin = plugin;
+            _plugin = plugin;
 
         }
 
         public void OnDoorAccess(PlayerDoorAccessEvent ev)
         {
-            if (waitingForPlayers)
+            if (_waitingForPlayers)
             {
                 ev.Allow = false;
             }
@@ -46,30 +36,27 @@ namespace WaitingAndChilling
 
         public void OnElevatorUse(PlayerElevatorUseEvent ev)
         {
-            if (waitingForPlayers)
+            if (_waitingForPlayers)
             {
                 ev.AllowUse = false;
             }
         }
 
-        int i = -1;
-        int role;
-
         public void OnFixedUpdate(FixedUpdateEvent ev)
         {
-            if (waitingForPlayers)
+            if (_waitingForPlayers)
             {
                 //System.Random rnd = new System.Random();
                 try { GameObject.Find("StartRound").transform.localScale = Vector3.zero; }
-                catch { plugin.Debug("StartRound not found... If you see this because you just started the server, ignore this."); }
+                catch { _plugin.Debug("StartRound not found... If you see this because you just started the server, ignore this."); }
 
-                if (timer < time)
+                if (_timer < _offset)
                 {
-                    timer += Time.deltaTime;
+                    _timer += Time.deltaTime;
                 }
-                else if (plugin.Server.GetPlayers().Count > 0)
+                else if (_plugin.Server.GetPlayers().Count > 0)
                 {
-                    timer = 0;
+                    _timer = 0;
                     string str = "<color=#fffbad>WAITING FOR PLAYERS</color>\n";
                     short waitingTimer = GameCore.RoundStart.singleton.Timer;
                     if (waitingTimer == -2)
@@ -84,7 +71,7 @@ namespace WaitingAndChilling
                     {
                         str += "<color=#7dff8a>" + waitingTimer.ToString("0") + "</color> seconds left";
                     }
-                    foreach (Player player in plugin.Server.GetPlayers())
+                    foreach (Player player in _plugin.Server.GetPlayers())
                     {
                         player.ShowHint(str);
                     }
@@ -118,12 +105,12 @@ namespace WaitingAndChilling
                 }
                 else
                 {
-                    timer = 0;
+                    _timer = 0;
                 }
 
-                if (plugin.stations)
+                if (_plugin.Stations)
                 {
-                    foreach (Player player in plugin.Server.GetPlayers())
+                    foreach (Player player in _plugin.Server.GetPlayers())
                     {
                         if (player.GetPosition().x >= 53.2576f && player.GetPosition().x <= 53.75784f && player.GetPosition().y >= 1018 && player.GetPosition().y <= 1020 && player.GetPosition().z >= -40.1317f && player.GetPosition().z <= -39)
                         {
@@ -139,129 +126,78 @@ namespace WaitingAndChilling
             }
         }
 
-        int pos = 0;
-
         public void OnRoundRestart(RoundRestartEvent ev)
         {
-            System.Random rnd = new System.Random();
-            pos = rnd.Next(0, positions.Count);
-            if (plugin.oneRolePerRound)
-                role = rnd.Next(0, roles.Count);
-            waitingForPlayers = true;
-            stationsSpwned = false;
+            _nextPos = (_nextPos + 1) % _positions.Count;
+            _waitingForPlayers = true;
+            _stationsSpawned = false;
         }
 
         public void OnRoundStart(RoundStartEvent ev)
         {
-            waitingForPlayers = false;
+            _waitingForPlayers = false;
         }
 
         void StartUp()
         {
-            List<char> chars = plugin.cords.ToCharArray().ToList();
-            foreach (char _char in chars)
+            foreach (string posString in _plugin.Cords.Split(';'))
             {
-                if (_char != ' ')
+                _plugin.Info(posString);
+                string[] xyz = posString.Split(',').Select(x=>x.Trim()).ToArray();
+                if (xyz.Length == 3)
                 {
-                    positionString += _char;
-                }
-            }
-            plugin.Info(positionString);
-            List<string> posStrings = positionString.Split(';').ToList();
-            foreach (string posString in posStrings)
-            {
-                plugin.Info(posString);
-                List<string> xyz = posString.Split(',').ToList();
-                if (xyz.Count == 3)
-                {
-                    plugin.Info("Gojng to try parse " + xyz[0] + " " + xyz[1] + " " + xyz[2]);
+                    _plugin.Info("Going to try parse " + xyz[0] + " " + xyz[1] + " " + xyz[2]);
                     try
                     {
-                        positions.Add(new Vector(float.Parse(xyz[0]), float.Parse(xyz[1]), float.Parse(xyz[2])));
+                        _positions.Add(new Vector(float.Parse(xyz[0]), float.Parse(xyz[1]), float.Parse(xyz[2])));
                     }
                     catch
                     {
-                        plugin.Info("Could not parse " + posString);
+                        _plugin.Info("Could not parse " + posString);
                     }
                 }
             }
-            if (!positions.Any())
+            if (!_positions.Any())
             {
-                plugin.Info("positions list empty, adding default.");
-                positions.Add(new Vector(53, 1020, -43));
+                _plugin.Info("positions list empty, adding default.");
+                _positions.Add(new Vector(53, 1020, -43));
             }
-            System.Random rnd = new System.Random();
-            pos = rnd.Next(0, positions.Count);
-            List<char> charsRole = plugin.roleInt.ToCharArray().ToList();
-            foreach (char _char in charsRole)
-            {
-                if (_char != ' ')
-                {
-                    rolesString += _char;
-                }
-            }
-            plugin.Info(rolesString);
-            List<string> roleStrings = rolesString.Split(',').ToList();
-            foreach (string roleString in roleStrings)
-            {
-                plugin.Info(roleString);
-                try
-                {
-                    roles.Add(int.Parse(roleString));
-                }
-                catch
-                {
-                    plugin.Info("Could not parse " + roleString);
-                }
-            }
-            if (!roles.Any())
-            {
-                roles.Add(14);
-            }
-            if (plugin.oneRolePerRound)
-                role = rnd.Next(0, roles.Count);
-
-
-
+            _nextPos = (_nextPos + 1) % _positions.Count;
         }
 
         void SpawnStations()//spawn weapon stations
         {
-            plugin.SpawnWorkbench(new Vector3(97, 976, 117), new Vector3(0, -90, 0), new Vector3(25, 10, 5), true, "Work Station");
-            plugin.SpawnWorkbench(new Vector3(126, 976, 138), new Vector3(0, 0, 0), new Vector3(25, 10, 5), true, "Work Station");
-            plugin.SpawnWorkbench(new Vector3(147, 976, 109), new Vector3(0, 90, 0), new Vector3(25, 10, 5), true, "Work Station");
-            plugin.SpawnWorkbench(new Vector3(119, 976, 90), new Vector3(0, 180, 0), new Vector3(25, 10, 5), true, "Work Station");
+            _plugin.SpawnWorkbench(new Vector3(97, 976, 117), new Vector3(0, -90, 0), new Vector3(25, 10, 5), true, "Work Station");
+            _plugin.SpawnWorkbench(new Vector3(126, 976, 138), new Vector3(0, 0, 0), new Vector3(25, 10, 5), true, "Work Station");
+            _plugin.SpawnWorkbench(new Vector3(147, 976, 109), new Vector3(0, 90, 0), new Vector3(25, 10, 5), true, "Work Station");
+            _plugin.SpawnWorkbench(new Vector3(119, 976, 90), new Vector3(0, 180, 0), new Vector3(25, 10, 5), true, "Work Station");
 
-            plugin.SpawnWorkbench(new Vector3(55, 1019, -39.5f), new Vector3(0, 90, 0), new Vector3(1, 1, 1), true, "Work Station");
-            plugin.SpawnWorkbench(new Vector3(52, 1019, -39.5f), new Vector3(0, -90, 0), new Vector3(1, 1, 1), true, "Work Station");
-            plugin.SpawnWorkbench(new Vector3(53.5f, 1018, -39.4f), new Vector3(0, 180, 0), new Vector3(1, 1, 1), true, "Work Station");
+            _plugin.SpawnWorkbench(new Vector3(55, 1019, -39.5f), new Vector3(0, 90, 0), new Vector3(1, 1, 1), true, "Work Station");
+            _plugin.SpawnWorkbench(new Vector3(52, 1019, -39.5f), new Vector3(0, -90, 0), new Vector3(1, 1, 1), true, "Work Station");
+            _plugin.SpawnWorkbench(new Vector3(53.5f, 1018, -39.4f), new Vector3(0, 180, 0), new Vector3(1, 1, 1), true, "Work Station");
 
-            plugin.SpawnWorkbench(new Vector3(55 + 63.93872f, 1019 - 41.38f, -39.5f + 173.04748f), new Vector3(0, 90, 0), new Vector3(1, 1, 1), true, "Work Station");
-            plugin.SpawnWorkbench(new Vector3(52 + 63.93872f, 1019 - 41.38f, -39.5f + 173.04748f), new Vector3(0, -90, 0), new Vector3(1, 1, 1), true, "Work Station");
-            plugin.SpawnWorkbench(new Vector3(53.5f + 63.93872f, 1018 - 41.38f, -39.4f + 173.04748f), new Vector3(0, 180, 0), new Vector3(1, 1, 1), true, "Work Station");
+            _plugin.SpawnWorkbench(new Vector3(55 + 63.93872f, 1019 - 41.38f, -39.5f + 173.04748f), new Vector3(0, 90, 0), new Vector3(1, 1, 1), true, "Work Station");
+            _plugin.SpawnWorkbench(new Vector3(52 + 63.93872f, 1019 - 41.38f, -39.5f + 173.04748f), new Vector3(0, -90, 0), new Vector3(1, 1, 1), true, "Work Station");
+            _plugin.SpawnWorkbench(new Vector3(53.5f + 63.93872f, 1018 - 41.38f, -39.4f + 173.04748f), new Vector3(0, 180, 0), new Vector3(1, 1, 1), true, "Work Station");
         }
 
         public void OnPlayerJoin(PlayerJoinEvent ev)
         {
-            if (!startUpDone)
+            if (!_startUpDone)
             {
                 StartUp();
-                startUpDone = true;
+                _startUpDone = true;
             }
-            if (plugin.stations && !stationsSpwned)
+            if (_plugin.Stations && !_stationsSpawned)
             {
                 SpawnStations();
-                stationsSpwned = true;
+                _stationsSpawned = true;
             }
-            if (waitingForPlayers)
+            if (_waitingForPlayers)
             {
-                if (!plugin.oneRolePerRound)
-                {
-                    System.Random rnd = new System.Random();
-                    role = rnd.Next(0, roles.Count);
-                }
-                //ev.Player.Teleport(positions[pos]);
-                ev.Player.ChangeRole((Smod2.API.RoleType)roles[role]);
+                
+                ev.Player.ChangeRole((Smod2.API.RoleType)_plugin.Role);
+                ev.Player.Teleport(_positions[_nextPos]);
             }
         }
     }
